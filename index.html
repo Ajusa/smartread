@@ -12,7 +12,7 @@
 
 <body>
     <main class="container mt5" id="app">
-        <h2 class="tc bb b-red">{{textSplit[currentPos]}}</h2>
+        <h2 class="tc bb b-red">{{textSplit[currentPos]}} {{textSplit[currentPos+1]}}</h2>
         <button @click="pause = !pause">{{(!pause) ? 'Pause' :'Play'}}</button>
         <p class="mt2">Words per minute: {{(1/speed)*1000*60}}</p>
         <p class="mt1">
@@ -75,7 +75,7 @@ var app = new Vue({
             if (this.textSplit.length - 1 < this.currentPos) {
                 clearInterval(this.interval);
             } else {
-                this.currentPos++
+                this.currentPos += 2
             }
             if (this.currentPos < this.curve) {
                 this.speed = this.startingSpeed / Math.pow(2, this.currentPos / 30);
