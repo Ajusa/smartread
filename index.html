@@ -15,6 +15,10 @@
         <h2 class="tc bb b-red">{{textSplit[currentPos]}}</h2>
         <button @click="pause = !pause">{{(!pause) ? 'Pause' :'Play'}}</button>
         <p class="mt2">Words per minute: {{(1/speed)*1000*60}}</p>
+        <p class="mt1">
+        Original Time: {{Math.round((textSplit.length/((1/startingSpeed)))/1000)}} seconds <br>
+		New Time: {{Math.round(totalTime/1000)}} seconds <br>
+        Time saved: {{ Math.round((textSplit.length/((1/startingSpeed)) - totalTime)/1000) }} seconds</p>
         <h4 class="mt2">Enter text here</h4>
         <textarea v-model="text" cols="30" rows="10"></textarea>
         <button @click="start">Start reading</button>
@@ -28,7 +32,7 @@
                 <input type="number" :value="(1/startingSpeed)*60000" @input="startingSpeed = 60000/$event.target.value">
             </div>
             <div class="six columns">
-            <div class="tc">{{curve}} words in to be at max speed</div>
+                <div class="tc">{{curve}} words in to be at max speed</div>
                 <input type="range" min="0" max="100" v-model="curve" class="slider">
             </div>
         </div>
@@ -97,6 +101,23 @@ var app = new Vue({
             }, 25)
         }
     },
+    computed: {
+        totalTime: function() {
+        	var total = 0
+        	var speed = this.speed
+            for (var i = 0; i < this.textSplit.length; i++) {
+                if (i < this.curve) {
+                    speed = this.startingSpeed / Math.pow(2, i / 30);
+                } else {
+                    speed -= .4
+                }
+                if (speed < 80) speed = 80
+                total += speed
+            }
+            return total
+        }
+    },
+
 })
 </script>
 
